@@ -1,0 +1,20 @@
+---
+- hosts: databaseservers
+ 
+  
+
+  tasks:
+    - name: Create new database 
+      mysql_db:
+        name: test
+        state: present
+      
+    - name: Copy database dump file
+      copy:
+        src: database.sql
+        dest: /tmp
+    - name: Restore database
+      mysql_db:
+        name: test
+        state: import
+        target: /tmp/database.sql
