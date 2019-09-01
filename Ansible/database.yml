@@ -1,20 +1,24 @@
 ---
 - hosts: databaseservers
- 
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  
+  tasks:
+  - name: install pip
+    apt: name=python-pip state=present
+
+  - name: Install Python MySQLB module
+    pip: name=MySQL-python
+
+  - name: Install MySQL
+    apt: name=mysql-server update_cache=yes cache_valid_time=3600 state=present
+   
+  - name: Start the MySQL service
+    service:
+      name: mysql
+      state: started
+      enabled: true 
   
 
-  tasks:
-    - name: Create new database 
-      mysql_db:
-        name: test
-        state: present
-      
-    - name: Copy database dump file
-      copy:
-        src: database.sql
-        dest: /tmp
-    - name: Restore database
-      mysql_db:
-        name: test
-        state: import
-        target: /tmp/database.sql
+
