@@ -30,8 +30,8 @@
         - "80:80"
         - "443:443"
         env:
-          HOST_NAME: "{{ ansible_env.HOST_NAME }}"        
+          HOST_NAME: "{{ ansible_hostname }}"        
           DB_ADDRESS: "{{ lookup('env','DB_ADDRESS') }}"
-          DB_USERNAME: "{{ lookup('env','DB_ADDRESS') }}"
+          DB_USERNAME: "{{ lookup('env','DB_USERNAME') }}"
           DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
           DB_NAME: "{{ lookup('env','DB_NAME') }}"

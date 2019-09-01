@@ -3,22 +3,62 @@
   remote_user: ubuntu
   become: yes
   become_method: sudo
+  gather_facts: true
+
   
+
   tasks:
-  - name: install pip
-    apt: name=python-pip state=present
+    - name: Copying database file
+      copy:
+        src: ./Database/database.sql
+        dest: /tmp
 
-  - name: Install Python MySQLB module
-    pip: name=MySQL-python
+    - name: Install MySQL
+      apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
+      with_items:
+      - python-mysqldb
+      - mysql-server
 
-  - name: Install MySQL
-    apt: name=mysql-server update_cache=yes cache_valid_time=3600 state=present
-   
-  - name: Start the MySQL service
-    service:
-      name: mysql
-      state: started
-      enabled: true 
-  
+#    - name: Restore database
+#      mysql_db:
+#        name: "{{ lookup('env','DB_NAME') }}"
+#        state: import
+#        target: /tmp/database.sql
+
+    - name: update mysql root password
+      mysql_user:
+        name: root
+        host: "{{ item }}"
+        password: password
+        login_user: root
+        login_password: password
+        check_implicit_admin: yes
+        priv: "*.*:ALL,GRANT"
+        host: "%"
+      with_items:
+        - "{{ ansible_hostname }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
+
+    - name: Create app user
+      mysql_user:
+        host: "{{ item }}"
+        login_user: root
+        login_password: password
+        name: "{{ lookup('env','DB_USERNAME') }}"
+        password: "{{ lookup('env','DB_PASSWORD') }}"
+        priv: "*.*:ALL,GRANT"
+        state: present
+      with_items:
+        - "{{ ansible_hostname }}"
+        - 127.0.0.1
+        - ::1
+        - localhost
 
 
+    - name: Start the MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: true
