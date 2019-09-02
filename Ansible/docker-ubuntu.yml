@@ -10,6 +10,9 @@
   
 
   tasks:
+    - name: install aptitude
+      command: apt-get -y install aptitude
+
     - name: Install pip
       apt: name=python-pip state=present
       

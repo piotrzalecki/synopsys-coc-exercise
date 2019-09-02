@@ -13,17 +13,25 @@
         src: ./Database/database.sql
         dest: /tmp
 
+    - name: aptitude install
+      command: apt-get -y install aptitude
+
     - name: Install MySQL
       apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
       with_items:
       - python-mysqldb
       - mysql-server
 
-#    - name: Restore database
-#      mysql_db:
-#        name: "{{ lookup('env','DB_NAME') }}"
-#        state: import
-#        target: /tmp/database.sql
+    - name: Restore database
+      mysql_db:
+        name: "{{ lookup('env','DB_NAME') }}"
+        state: import
+        target: /tmp/database.sql
+
+    - name: Copying mysql config file
+      copy: 
+        src: ./Database/mysqld.cnf
+        dest: /etc/mysql/mysql.conf.d/mysqld.cnf
 
     - name: update mysql root password
       mysql_user:
@@ -49,6 +57,7 @@
         name: "{{ lookup('env','DB_USERNAME') }}"
         password: "{{ lookup('env','DB_PASSWORD') }}"
         priv: "*.*:ALL,GRANT"
+        host: "%"
         state: present
       with_items:
         - "{{ ansible_hostname }}"
