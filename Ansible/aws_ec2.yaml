@@ -1,0 +1,14 @@
+plugin: aws_ec2
+
+regions:
+  - eu-west-1
+
+keyed_groups:
+  - key: tags.Name
+    prefix: ""
+    separator: ""
+
+
+#groups:
+#  webservers: "'web-server' in (tags|list)"
+#  dbservers: "'db-server' in (tags|list)"
