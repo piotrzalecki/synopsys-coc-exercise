@@ -12,12 +12,6 @@
       copy:
         src: ./Database/database.sql
         dest: /tmp
-
-    - name: aptitude install
-      apt:
-        name: aptitude
-        state: present
-        update_cache: yes
      
     - name: Install MySQL
       apt:
@@ -30,10 +24,6 @@
         name: python-mysqldb
         update_cache: yes
         state: present
-
-    - name: Update cache
-      apt:
-        update_cache: yes
 
     - name: Restore database
       mysql_db:

@@ -10,17 +10,11 @@
   
 
   tasks:
-    - name: install aptitude
-      apt:
-        name: aptitude
-        state: present
-        update_cache: yes
-     
     - name: Install pip
       apt: 
         name: python-pip
         state: present
-        update_cache: yes
+#        update_cache: yes
       
     - name: Install Docker Module for Python
       pip:
@@ -29,7 +23,7 @@
          -  request>=2.20.1
         executable: /usr/bin/pip
 
-     - name: Create default containers
+    - name: Create default containers
       docker_container:
         name: "{{ default_container_name }}"
         image: "{{ default_container_image }}"
@@ -38,7 +32,7 @@
         - "443:443"
         env:
           HOST_NAME: "{{ ansible_nodename }}"        
-          DB_ADDRESS: "{{ lookup('env','DB_ADDRESS') }}"
+          DB_ADDRESS: "{{ dbaddress }}"
           DB_USERNAME: "{{ lookup('env','DB_USERNAME') }}"
           DB_PASSWORD: "{{ lookup('env','DB_PASSWORD') }}"
           DB_NAME: "{{ lookup('env','DB_NAME') }}"

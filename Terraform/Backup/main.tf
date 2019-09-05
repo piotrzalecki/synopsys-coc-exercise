@@ -32,7 +32,7 @@ resource "aws_instance" "database" {
 }
 
 resource "local_file" "dbaddress" {
-  content = "{'dbaddress':'${aws_instance.database.public_ip}'}"
+  content = "{'dbaddress':'£{aws_instance.database.public_ip}'}"
   filename = "../Ansible/dbaddress.json"
 
 }
