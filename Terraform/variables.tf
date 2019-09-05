@@ -30,7 +30,3 @@ variable "ami" {
   default     = "ami-06358f49b5839867c"
 }
 
-# variable "key_path" {
-#   description = "SSH Public Key path"
-#   default = "/home/core/.ssh/id_rsa.pub"
-# }
